@@ -15,8 +15,8 @@ class BaseModel:
         """
         self.id = str(uuid4())
         tfm = %Y-%m-%dT%H:%M:%S.%f
-        self.created_at = datetime.currently()
-        self.updated_at = datetime.currently()
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
         if len(kwargs) != 0:
             for time, now in kwargs.items():
                 if time == "created_at" or time == "updated_at":
