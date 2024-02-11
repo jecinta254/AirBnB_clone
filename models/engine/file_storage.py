@@ -11,11 +11,11 @@ from models.review import Review
 
 
 class FileStorage:
-    """Representation of abstracted storage engine.
+    """Represent an abstracted storage engine.
 
-    P. Attributes:
-        __file_path (str): The name of file to save objects to.
-        __objects (dict): A dictionary of instance objects.
+    Attributes:
+        __file_path (str): The name of the file to save objects to.
+        __objects (dict): A dictionary of instantiated objects.
     """
     __file_path = "file.json"
     __objects = {}
@@ -26,24 +26,24 @@ class FileStorage:
 
     def new(self, obj):
         """Set in __objects obj with key <obj_class_name>.id"""
-        obj_class_name = obj.__class__.__name__
-        FileStorage.__objects["{}.{}".format(obj_class_name, obj.id)] = obj
+        ocname = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
 
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
-        od = FileStorage.__objects
-        objd = {obj: od[obj].to_dict() for obj in od.keys()}
+        odict = FileStorage.__objects
+        objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
         with open(FileStorage.__file_path, "w") as f:
-            json.dump(objd, f)
+            json.dump(objdict, f)
 
     def reload(self):
-        """Deserial the JSON file __file_path to __objects, if it exists."""
+        """Deserialize the JSON file __file_path to __objects, if it exists."""
         try:
             with open(FileStorage.__file_path) as f:
-                objd = json.load(f)
-                for item in objd.values():
-                    ourclass = item["__class__"]
-                    del item["__class__"]
-                    self.new(eval(ourclass)(**item))
+                objdict = json.load(f)
+                for o in objdict.values():
+                    cls_name = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(cls_name)(**o))
         except FileNotFoundError:
             return
